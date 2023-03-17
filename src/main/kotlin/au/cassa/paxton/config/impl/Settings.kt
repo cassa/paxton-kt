@@ -1,4 +1,5 @@
 package au.cassa.paxton.config.impl
 
-object Settings {
-}
+import au.cassa.paxton.config.YamlConfig
+
+object Settings : YamlConfig("settings")

@@ -10,4 +10,5 @@ object TestListener : ListenerAdapter() {
 
         event.channel.sendMessage("[Test]: ${event.user!!.asMention} reacted").queue()
     }
+
 }

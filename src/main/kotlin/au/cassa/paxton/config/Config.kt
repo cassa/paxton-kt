@@ -1,11 +1,16 @@
 package au.cassa.paxton.config
 
+import org.spongepowered.configurate.CommentedConfigurationNode
+
 abstract class Config(
-    fileName: String
+    id: String
 ) {
 
-    fun load() {
-        //TODO
-    }
+    lateinit var rootNode: CommentedConfigurationNode
+        protected set
+
+    abstract fun load()
+
+    abstract fun save()
 
 }

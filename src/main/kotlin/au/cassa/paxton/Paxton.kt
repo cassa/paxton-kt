@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package au.cassa.paxton
 
-import au.cassa.paxton.config.impl.Secret
 import au.cassa.paxton.listener.TestListener
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Activity
@@ -26,24 +25,30 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.sharding.ShardManager
 import java.util.logging.Logger
 import javax.security.auth.login.LoginException
+import kotlin.io.path.Path
 
 object Paxton {
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    val logger: Logger = Logger.getLogger("Paxton")
+    val workingDir = Path(System.getProperty("user.dir"))
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    lateinit var shardManager: ShardManager
+    private val logger: Logger = Logger.getLogger("Paxton")
+    private lateinit var shardManager: ShardManager
+    private lateinit var token: String
 
     @JvmStatic
     fun main(args: Array<String>) {
-        build()
+        loadEnv()
+        loadBot()
     }
 
-    private fun build() {
+    private fun loadEnv() {
+        token = System.getProperty("PAXTON_TOKEN")
+    }
+
+    private fun loadBot() {
         try {
             shardManager = DefaultShardManagerBuilder
-                .createDefault(Secret.token())
+                .createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("cassa.au"))
                 .addEventListeners(
