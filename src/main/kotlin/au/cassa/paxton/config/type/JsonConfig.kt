@@ -1,15 +1,16 @@
-package au.cassa.paxton.config
+package au.cassa.paxton.config.type
 
+import au.cassa.paxton.config.Config
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 import kotlin.io.path.Path
 
-abstract class YamlConfig(
+abstract class JsonConfig(
     id: String
 ) : Config(
     id
 ) {
 
-    private val path = Path("${id}.yml")
+    private val path = Path("${id}.json")
 
     private val loader = YamlConfigurationLoader
         .builder()
