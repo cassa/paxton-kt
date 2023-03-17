@@ -1,6 +1,9 @@
 # IDEs
 .idea
 
+# Maven
+target/
+
 # macOS
 ._.git
 .DS_Store
