@@ -27,6 +27,7 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.sharding.ShardManager
 import java.util.logging.Logger
 import javax.security.auth.login.LoginException
+import kotlin.system.exitProcess
 
 object Paxton {
 
@@ -70,25 +71,12 @@ object Paxton {
             shardManager = DefaultShardManagerBuilder
                 .createDefault(token)
                 .setStatus(OnlineStatus.ONLINE)
-                .setActivity(Activity.watching("cassa.au"))
-                .enableIntents(
-                    // just load everything into here
-                    GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
-                    GatewayIntent.GUILD_MEMBERS,
-                    GatewayIntent.GUILD_MESSAGES,
-                    GatewayIntent.GUILD_INVITES,
-                    GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                    GatewayIntent.GUILD_MESSAGE_TYPING,
-                    GatewayIntent.GUILD_MODERATION,
-                    GatewayIntent.GUILD_PRESENCES,
-                    GatewayIntent.GUILD_VOICE_STATES,
-                    GatewayIntent.GUILD_WEBHOOKS,
-                    GatewayIntent.SCHEDULED_EVENTS,
-                    GatewayIntent.MESSAGE_CONTENT
-                )
+                .setActivity(Activity.watching("cassa.org.au"))
+                .enableIntents(GatewayIntent.values().toSet()) // we want ALL the intents! :)
                 .build()
         } catch(ex: LoginException) {
-            logger.severe("Unable to login; possibly using invalid bot token.")
+            logger.severe("Unable to login; possibly using invalid bot token. Ending process.")
+            exitProcess(1)
         }
     }
 

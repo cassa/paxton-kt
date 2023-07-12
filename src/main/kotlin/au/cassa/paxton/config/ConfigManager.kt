@@ -1,11 +1,13 @@
 package au.cassa.paxton.config
 
-import au.cassa.paxton.config.impl.Settings
+import au.cassa.paxton.config.impl.DataCfg
+import au.cassa.paxton.config.impl.SettingsCfg
 
 object ConfigManager {
 
-    private val configs = linkedSetOf<Config>(
-        Settings
+    private val configs: LinkedHashSet<Config> = linkedSetOf(
+        DataCfg,
+        SettingsCfg,
     )
 
     fun load() {

@@ -1,11 +1,13 @@
 package au.cassa.paxton.command
 
-import au.cassa.paxton.command.impl.PaxtonCommand
+import au.cassa.paxton.command.impl.PaxtonCmd
+import au.cassa.paxton.command.impl.SendTemplateCmd
 
 object CommandManager {
 
-    private val commands = linkedSetOf<SlashCommand>(
-        PaxtonCommand
+    private val commands: LinkedHashSet<SlashCommand> = linkedSetOf(
+        PaxtonCmd,
+        SendTemplateCmd
     )
 
     fun load() {

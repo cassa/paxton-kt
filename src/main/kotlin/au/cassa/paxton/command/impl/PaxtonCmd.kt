@@ -3,14 +3,18 @@ package au.cassa.paxton.command.impl
 import au.cassa.paxton.command.CommandUtils
 import au.cassa.paxton.command.SlashCommand
 import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions
+import net.dv8tion.jda.api.interactions.commands.build.Commands
 
-object PaxtonCommand : SlashCommand(
-    id          = "paxton",
-    description = "Version information about this Paxton instance"
+object PaxtonCmd : SlashCommand(
+    cmdData = Commands
+        .slash("paxton", "Learn more about Paxton, CASSA's Discord bot")
+        .setDefaultPermissions(DefaultMemberPermissions.ENABLED)
 ) {
 
-    override fun run(
+    override fun onInteraction(
         event: SlashCommandInteractionEvent
     ) {
         event
@@ -33,6 +37,10 @@ object PaxtonCommand : SlashCommand(
             )
             .setEphemeral(true)
             .queue()
+    }
+
+    override fun onAutoComplete(event: CommandAutoCompleteInteractionEvent) {
+        // intentionally blank: no suggestions to provide
     }
 
 }
