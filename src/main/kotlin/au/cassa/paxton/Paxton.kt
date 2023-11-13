@@ -18,8 +18,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package au.cassa.paxton
 
-import au.cassa.paxton.command.CommandManager
 import au.cassa.paxton.config.ConfigManager
+import au.cassa.paxton.config.impl.SecretCfg
+import au.cassa.paxton.data.DatabaseManager
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.requests.GatewayIntent
@@ -32,34 +33,60 @@ import kotlin.system.exitProcess
 object Paxton {
 
     // Neat console logging utility from Java.
-    val logger: Logger = Logger.getLogger("Paxton")
+    val log: Logger = Logger.getLogger("Paxton")
 
     // JDA's shard manager. Initialized @ loadShards.
     lateinit var shardManager: ShardManager
-
-    // Token of the bot account. Initialized @ loadEnv.
-    lateinit var token: String
+        private set
 
     /**
      * The JVM runs this function on the program's startup.
      */
     @JvmStatic
     fun main(args: Array<String>) {
-        // Please try to keep the correct order of method calls.
-
-        loadEnv()
-        loadShards()
-        ConfigManager.load()
-        CommandManager.load()
+        startup()
     }
 
-    /**
-     * Load miscellaneous environment variables.
-     */
-    private fun loadEnv() {
-        // Various environment variables. Load them into variables so they're easy to access.
+    fun startup() {
+        log.info("Starting up")
 
-        token = System.getProperty("PAXTON_TOKEN")
+        // order of calls is important here
+        ConfigManager.load()
+        DatabaseManager.startup()
+        loadShards()
+        // note: listeners and commands are loaded in ReadyListener
+
+        while(true) {
+            log.info("Awaiting command... (Use 'help' for help, 'quit' to shutdown.)")
+            val command: List<String> = readln().split(' ')
+            when (command[0].lowercase()) {
+                "quit" -> {
+                    shutdown()
+                }
+                "help" -> {
+                    log.info(
+                        """
+                            Available commands:
+                             • help
+                               View available commands.
+                               
+                             • quit
+                               Makes the bot shut-down.
+                        """.trimIndent()
+                    )
+                }
+                else -> {
+                    log.warning("Unknown command '${command[0]}'")
+                }
+            }
+        }
+    }
+
+    fun shutdown() {
+        log.info("Shutting down")
+        shardManager.shutdown()
+        DatabaseManager.shutdown()
+        exitProcess(0)
     }
 
     /**
@@ -69,14 +96,14 @@ object Paxton {
     private fun loadShards() {
         try {
             shardManager = DefaultShardManagerBuilder
-                .createDefault(token)
+                .createDefault(SecretCfg.token())
                 .setStatus(OnlineStatus.ONLINE)
-                .setActivity(Activity.watching("cassa.org.au"))
+                .setActivity(Activity.watching("cassa.au"))
                 .enableIntents(GatewayIntent.values().toSet()) // we want ALL the intents! :)
                 .build()
         } catch(ex: LoginException) {
-            logger.severe("Unable to login; possibly using invalid bot token. Ending process.")
-            exitProcess(1)
+            log.severe("Unable to login; are you using a valid bot token and have an internet connection?")
+            throw ex
         }
     }
 

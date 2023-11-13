@@ -1,6 +1,6 @@
-package au.cassa.paxton.command.impl
+package au.cassa.paxton.slashcmd.impl
 
-import au.cassa.paxton.command.SlashCommand
+import au.cassa.paxton.slashcmd.SlashCmd
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands
 /**
  * Posts a user-provided message template in the channel the command is ran in.
  */
-object SendTemplateCmd : SlashCommand(
+object SendTemplateSlashCmd : SlashCmd(
     cmdData = Commands
         .slash("send-template", "Send message template")
         .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.MANAGE_CHANNEL))

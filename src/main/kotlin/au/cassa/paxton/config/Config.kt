@@ -3,7 +3,7 @@ package au.cassa.paxton.config
 import org.spongepowered.configurate.CommentedConfigurationNode
 
 abstract class Config(
-    id: String
+    val id: String
 ) {
 
     lateinit var rootNode: CommentedConfigurationNode
@@ -12,5 +12,7 @@ abstract class Config(
     abstract fun load()
 
     abstract fun save()
+
+    abstract fun saveIfNotExists()
 
 }

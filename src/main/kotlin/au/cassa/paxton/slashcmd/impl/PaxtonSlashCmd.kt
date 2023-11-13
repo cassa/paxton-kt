@@ -1,14 +1,14 @@
-package au.cassa.paxton.command.impl
+package au.cassa.paxton.slashcmd.impl
 
-import au.cassa.paxton.command.CommandUtils
-import au.cassa.paxton.command.SlashCommand
+import au.cassa.paxton.slashcmd.SlashCmdUtils
+import au.cassa.paxton.slashcmd.SlashCmd
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 
-object PaxtonCmd : SlashCommand(
+object PaxtonSlashCmd : SlashCmd(
     cmdData = Commands
         .slash("paxton", "Learn more about Paxton, CASSA's Discord bot")
         .setDefaultPermissions(DefaultMemberPermissions.ENABLED)
@@ -32,7 +32,7 @@ object PaxtonCmd : SlashCommand(
                         If you have any queries or have an interest in contributing, contact CASSA's Tech Admin. :)
                         """.trimIndent()
                     )
-                    .setColor(CommandUtils.colorInfo)
+                    .setColor(SlashCmdUtils.colorInfo)
                     .build()
             )
             .setEphemeral(true)

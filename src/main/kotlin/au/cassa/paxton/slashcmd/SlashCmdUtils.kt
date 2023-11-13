@@ -1,8 +1,8 @@
-package au.cassa.paxton.command
+package au.cassa.paxton.slashcmd
 
 import java.awt.Color
 
-object CommandUtils {
+object SlashCmdUtils {
 
     val colorSevere = Color(255, 126, 126)
     val colorWarning = Color(255, 218, 126)

@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package au.cassa.paxton.config.type
 
 import au.cassa.paxton.config.Config
@@ -10,19 +12,24 @@ abstract class YamlConfig(
     id
 ) {
 
-    private val path = Path("${id}.yml")
+    val relativePath = Path("${id}.yml")
 
     private val loader = YamlConfigurationLoader
         .builder()
-        .path(path)
+        .path(relativePath)
         .build()
 
     override fun load() {
+        saveIfNotExists()
         rootNode = loader.load()
     }
 
     override fun save() {
         loader.save(rootNode)
+    }
+
+    override fun saveIfNotExists() {
+        TODO("Not yet implemented")
     }
 
 }
