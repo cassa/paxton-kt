@@ -19,10 +19,10 @@ abstract class SlashCmd(
                     event: SlashCommandInteractionEvent
                 ) {
                     // If the event is already acknowledged, return.
-                    if(event.isAcknowledged) return
+                    if (event.isAcknowledged) return
 
                     // If the user types in a command that isn't this one, return.
-                    if(!event.name.equals(cmdData.name, ignoreCase = true)) return
+                    if (!event.name.equals(cmdData.name, ignoreCase = true)) return
 
                     // Okay, all checks have passed :) run!
                     onInteraction(event)
@@ -32,10 +32,10 @@ abstract class SlashCmd(
                     event: CommandAutoCompleteInteractionEvent
                 ) {
                     // If the event is already acknowledged, return.
-                    if(event.isAcknowledged) return
+                    if (event.isAcknowledged) return
 
                     // If the user types in a command that isn't this one, return.
-                    if(!event.name.equals(cmdData.name, ignoreCase = true)) return
+                    if (!event.name.equals(cmdData.name, ignoreCase = true)) return
 
                     // Okay, all checks have passed :) run!
                     onAutoComplete(event)
@@ -43,7 +43,7 @@ abstract class SlashCmd(
             }
         )
 
-        Paxton.shardManager.guilds.forEach { guild -> guild.upsertCommand(cmdData)}
+        Paxton.shardManager.guilds.forEach { guild -> guild.upsertCommand(cmdData) }
 
         Paxton.log.info("Loaded slash command '${cmdData.name}'")
     }

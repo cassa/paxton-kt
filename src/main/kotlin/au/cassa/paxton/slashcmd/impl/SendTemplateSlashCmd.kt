@@ -26,6 +26,8 @@ object SendTemplateSlashCmd : SlashCmd(
         //TODO if id is not a valid message template ID, notify user ephemerally and return
 
         //TODO get message contents and send it to the channel (non-ephemerally).
+
+        TODO("Not yet implemented")
     }
 
     override fun onAutoComplete(event: CommandAutoCompleteInteractionEvent) {
@@ -33,7 +35,9 @@ object SendTemplateSlashCmd : SlashCmd(
             "id" -> {
                 val availableIds: Collection<String> = listOf() // TODO populate list of available message template IDs
                 event.replyChoiceStrings(availableIds.filter { it.contains(event.focusedOption.value) }).queue()
+                TODO("Not yet implemented")
             }
+
             else -> {
                 // intentionally blank: no suggestions available
             }

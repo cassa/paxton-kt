@@ -56,13 +56,14 @@ object Paxton {
         loadShards()
         // note: listeners and commands are loaded in ReadyListener
 
-        while(true) {
+        while (true) {
             log.info("Awaiting command... (Use 'help' for help, 'quit' to shutdown.)")
             val command: List<String> = readln().split(' ')
             when (command[0].lowercase()) {
                 "quit" -> {
                     shutdown()
                 }
+
                 "help" -> {
                     log.info(
                         """
@@ -75,6 +76,7 @@ object Paxton {
                         """.trimIndent()
                     )
                 }
+
                 else -> {
                     log.warning("Unknown command '${command[0]}'")
                 }
@@ -101,7 +103,7 @@ object Paxton {
                 .setActivity(Activity.watching("cassa.au"))
                 .enableIntents(GatewayIntent.values().toSet()) // we want ALL the intents! :)
                 .build()
-        } catch(ex: LoginException) {
+        } catch (ex: LoginException) {
             log.severe("Unable to login; are you using a valid bot token and have an internet connection?")
             throw ex
         }

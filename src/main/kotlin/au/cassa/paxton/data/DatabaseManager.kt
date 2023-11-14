@@ -8,8 +8,6 @@ import java.util.*
 
 object DatabaseManager {
 
-    // SQLite: const val DB_RELATIVE_PATH = "sqlite.db"
-
     lateinit var connection: Connection
         private set
 
@@ -24,18 +22,18 @@ object DatabaseManager {
     }
 
     private fun connect() {
-        // todo mysql
-        // SQLite: connection = DriverManager.getConnection("jdbc:sqlite:$DB_RELATIVE_PATH")
+        // todo connect to mysql
+        TODO("Not yet implemented")
     }
 
     private fun createTables() {
-        val statement = connection.createStatement()
-
-        statement.executeUpdate(readSqlResourceFile("create_tables"))
-
-        statement.close()
+        with(connection.createStatement()) {
+            executeUpdate(readSqlResourceFile("create_tables"))
+            close()
+        }
     }
 
+    @Suppress("SameParameterValue")
     private fun readSqlResourceFile(
         name: String
     ): String {

@@ -1,7 +1,7 @@
 package au.cassa.paxton.slashcmd.impl
 
-import au.cassa.paxton.slashcmd.SlashCmdUtils
 import au.cassa.paxton.slashcmd.SlashCmd
+import au.cassa.paxton.slashcmd.SlashCmdUtils
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent

@@ -37,7 +37,7 @@ abstract class JsonConfig(
         // try to create the file - if it already exists, return
         file.parentFile.mkdirs()
         val alreadyExists = !file.createNewFile()
-        if(alreadyExists) return
+        if (alreadyExists) return
 
         // create input stream referencing resource file
         val istream = Paxton.javaClass.classLoader.getResourceAsStream(relativePath.pathString)!!
