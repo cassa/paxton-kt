@@ -6,6 +6,7 @@ import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.io.path.Path
+import kotlin.io.path.exists
 import kotlin.io.path.pathString
 
 abstract class JsonConfig(
@@ -35,7 +36,7 @@ abstract class JsonConfig(
         val file = File(relativePath.pathString)
 
         // try to create the file - if it already exists, return
-        file.parentFile.mkdirs()
+        file.parentFile?.mkdirs()
         val alreadyExists = !file.createNewFile()
         if (alreadyExists) return
 
@@ -47,6 +48,10 @@ abstract class JsonConfig(
 
         // write bytes from istream to ostream
         ostream.write(istream.readBytes())
+    }
+
+    override fun exists(): Boolean {
+        return relativePath.exists()
     }
 
 }

@@ -15,4 +15,6 @@ abstract class Config(
 
     abstract fun saveIfNotExists()
 
+    abstract fun exists(): Boolean
+
 }

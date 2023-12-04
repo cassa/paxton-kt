@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 
 object ListenerManager {
 
-    val listeners: Set<ListenerAdapter> = setOf(
+    val listeners: Collection<ListenerAdapter> = linkedSetOf(
         GuildMemberJoinListener,
         GuildMemberRemoveListener,
         GuildMemberUpdateAvatarListener,
@@ -25,7 +25,10 @@ object ListenerManager {
 
     fun load() {
         Paxton.log.info("Loading listeners")
-        listeners.forEach { Paxton.shardManager.addEventListener(it) }
+        listeners.forEach {
+            Paxton.log.info("Loading listener ${it.javaClass.simpleName}...")
+            Paxton.shardManager.addEventListener(it)
+        }
     }
 
 }

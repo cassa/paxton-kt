@@ -12,7 +12,7 @@ object MessageDeleteRecordListener : ListenerAdapter() {
     const val MSG_TRUNCATED_LEN = 256
 
     override fun onMessageDelete(event: MessageDeleteEvent) {
-        if (event.isFromGuild) return
+        if (!event.isFromGuild) return
 
         val previouslyLoggedMsg: LoggedMsg? = UserlogManager.findLoggedMsgByDisMsgId(event.messageIdLong)
 

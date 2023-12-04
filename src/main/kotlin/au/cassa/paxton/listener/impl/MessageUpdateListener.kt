@@ -9,7 +9,7 @@ import java.util.*
 object MessageUpdateListener : ListenerAdapter() {
 
     override fun onMessageUpdate(event: MessageUpdateEvent) {
-        if (event.isFromGuild) return
+        if (!event.isFromGuild) return
 
         val previousLoggedMsg: LoggedMsg? = UserlogManager.findLoggedMsgByDisMsgId(event.messageIdLong)
 

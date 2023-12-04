@@ -21,11 +21,13 @@ package au.cassa.paxton
 import au.cassa.paxton.config.ConfigManager
 import au.cassa.paxton.config.impl.SecretCfg
 import au.cassa.paxton.data.DatabaseManager
+import au.cassa.paxton.listener.ListenerManager
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.api.sharding.ShardManager
+import net.dv8tion.jda.api.utils.cache.CacheFlag
 import java.util.logging.Logger
 import javax.security.auth.login.LoginException
 import kotlin.system.exitProcess
@@ -54,7 +56,7 @@ object Paxton {
         ConfigManager.load()
         DatabaseManager.startup()
         loadShards()
-        // note: listeners and commands are loaded in ReadyListener
+        ListenerManager.load()
 
         while (true) {
             log.info("Awaiting command... (Use 'help' for help, 'quit' to shutdown.)")
@@ -98,10 +100,12 @@ object Paxton {
     private fun loadShards() {
         try {
             shardManager = DefaultShardManagerBuilder
-                .createDefault(SecretCfg.token())
+                .createDefault(SecretCfg.botToken())
+                .enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
+                .enableCache(CacheFlag.values().toSet())
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("cassa.au"))
-                .enableIntents(GatewayIntent.values().toSet()) // we want ALL the intents! :)
+                //.enableIntents(GatewayIntent.values().toSet()) // we want ALL the intents! :)
                 .build()
         } catch (ex: LoginException) {
             log.severe("Unable to login; are you using a valid bot token and have an internet connection?")

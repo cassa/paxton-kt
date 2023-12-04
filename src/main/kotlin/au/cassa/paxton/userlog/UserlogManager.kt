@@ -1,9 +1,12 @@
 package au.cassa.paxton.userlog
 
-import au.cassa.paxton.data.DatabaseManager
+import au.cassa.paxton.data.DatabaseManager.dbConnection
+import au.cassa.paxton.util.DatabaseUtils.getNullableLongFromResultSet
 import net.dv8tion.jda.api.entities.Message
+import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Statement
+import java.sql.Types
 import java.util.*
 
 object UserlogManager {
@@ -35,7 +38,7 @@ object UserlogManager {
         ): Long? {
             var ret: Long? = null
 
-            val statement: Statement = DatabaseManager.connection.createStatement()
+            val statement: Statement = dbConnection.createStatement()
 
             val resultSet: ResultSet = statement.executeQuery(
                 """
@@ -56,30 +59,27 @@ object UserlogManager {
             return ret
         }
 
-        fun rsGetNullableLong(resultSet: ResultSet, columnIndex: Int): Long? {
-            val l = resultSet.getLong(columnIndex)
-            return if (resultSet.wasNull()) null else l
-        }
-
-        fun serializeRecord(
+        fun getLoggedMsgById(
             recMsgId: Long
         ): LoggedMsg {
-            val statement: Statement = DatabaseManager.connection.createStatement()
-
-            val resultSet: ResultSet = statement.executeQuery(
+            val statement: PreparedStatement = dbConnection.prepareStatement(
                 """
                    SELECT *
                    FROM LogMessage
-                   WHERE id = $recMsgId
+                   WHERE id = ?
                    LIMIT 1;
                 """.trimIndent()
             )
+
+            statement.setLong(1, recMsgId)
+
+            val resultSet: ResultSet = statement.executeQuery()
 
             if (!resultSet.next()) {
                 throw IllegalArgumentException("Unable to query LogMessage record with id = $recMsgId")
             }
 
-            return LoggedMsg(
+            val loggedMsg = LoggedMsg(
                 resultSet.getLong(3), // dis user id
                 resultSet.getString(4), // username
                 resultSet.getDate(5), // received timestamp
@@ -93,13 +93,17 @@ object UserlogManager {
                 resultSet.getString(13), // latest msg
                 resultSet.getString(14), // msg type
                 resultSet.getString(15), // msg jump url
-                rsGetNullableLong(resultSet, 16), // referenced msg id
+                getNullableLongFromResultSet(resultSet, 16), // referenced msg id
                 resultSet.getString(17) // attachments summary
             )
+
+            statement.close()
+
+            return loggedMsg
         }
 
         val recMsgId: Long = tryFindRecordId(disMsgId) ?: return null
-        return serializeRecord(recMsgId)
+        return getLoggedMsgById(recMsgId)
     }
 
     fun insertGuildMemberUpdateAvatarRecord(
@@ -110,8 +114,23 @@ object UserlogManager {
         oldAvatarUrl: String?,
         newAvatarUrl: String?
     ) {
-        // todo insert record into LogGuildMemberUpdateAvatar
-        TODO("Not yet implemented")
+        val prepStatement = dbConnection.prepareStatement(
+            """
+                INSERT INTO LogGuildMemberUpdateAvatar
+                    (dis_user_id, username, timestamp, guild_id, old_avatar_url, new_avatar_url)
+                VALUES
+                    (?,           ?,        ?,         ?,        ?,              ?)
+                ;
+            """.trimIndent()
+        )
+        prepStatement.setLong(1, disUserId)
+        prepStatement.setString(2, username)
+        prepStatement.setDate(3, java.sql.Date(timestamp.time))
+        prepStatement.setLong(4, guildId)
+        prepStatement.setString(5, oldAvatarUrl)
+        prepStatement.setString(6, newAvatarUrl)
+        prepStatement.executeUpdate()
+        prepStatement.close()
     }
 
     fun insertUserUpdateNameRecord(
@@ -121,8 +140,22 @@ object UserlogManager {
         oldName: String?,
         newName: String?
     ) {
-        // todo insert record into LogUserUpdateName
-        TODO("Not yet implemented")
+        val prepStatement = dbConnection.prepareStatement(
+            """
+                INSERT INTO LogUserUpdateName
+                    (dis_user_id, username, timestamp, old_name, new_name)
+                VALUES
+                    (?,           ?,        ?,         ?,        ?)
+                ;
+            """.trimIndent()
+        )
+        prepStatement.setLong(1, disUserId)
+        prepStatement.setString(2, username)
+        prepStatement.setDate(3, java.sql.Date(timestamp.time))
+        prepStatement.setString(4, oldName)
+        prepStatement.setString(5, newName)
+        prepStatement.executeUpdate()
+        prepStatement.close()
     }
 
     fun insertGuildMemberJoinRecord(
@@ -133,8 +166,23 @@ object UserlogManager {
         displayName: String?,
         userCount: Int
     ) {
-        // todo insert record into LogGuildMemberJoin
-        TODO("Not yet implemented")
+        val prepStatement = dbConnection.prepareStatement(
+            """
+                INSERT INTO LogGuildMemberJoin
+                    (dis_user_id, username, timestamp, guild_id, displayname, user_count)
+                VALUES
+                    (?,           ?,        ?,         ?,        ?,           ?)
+                ;
+            """.trimIndent()
+        )
+        prepStatement.setLong(1, disUserId)
+        prepStatement.setString(2, username)
+        prepStatement.setDate(3, java.sql.Date(timestamp.time))
+        prepStatement.setLong(4, guildId)
+        prepStatement.setString(5, displayName)
+        prepStatement.setInt(6, userCount)
+        prepStatement.executeUpdate()
+        prepStatement.close()
     }
 
     fun insertGuildMemberRemoveRecord(
@@ -145,8 +193,24 @@ object UserlogManager {
         displayName: String?,
         userCount: Int
     ) {
-        // todo insert record into LogGuildMemberRemove
-        TODO("Not yet implemented")
+        with(dbConnection.prepareStatement(
+            """
+                INSERT INTO LogGuildMemberRemove
+                    (dis_user_id, username, timestamp, guild_id, displayname, user_count)
+                VALUES
+                    (?,           ?,        ?,         ?,        ?,           ?)
+                ;
+            """.trimIndent()
+        )) {
+            setLong(1, disUserId)
+            setString(2, username)
+            setDate(3, java.sql.Date(timestamp.time))
+            setLong(4, guildId)
+            setString(5, displayName)
+            setInt(6, userCount)
+            executeUpdate()
+            close()
+        }
     }
 
     fun insertGuildMemberUpdateNicknameRecord(
@@ -157,8 +221,24 @@ object UserlogManager {
         oldNickname: String?,
         newNickname: String?
     ) {
-        // todo insert record into LogGuildMemberUpdateNickname
-        TODO("Not yet implemented")
+        with(dbConnection.prepareStatement(
+            """
+                INSERT INTO LogGuildMemberUpdateNickname
+                    (dis_user_id, username, timestamp, guild_id, old_nickname, old_nickname)
+                VALUES
+                    (?,           ?,        ?,         ?,        ?,            ?)
+                ;
+            """.trimIndent()
+        )) {
+            setLong(1, disUserId)
+            setString(2, username)
+            setDate(3, java.sql.Date(timestamp.time))
+            setLong(4, guildId)
+            setString(5, oldNickname)
+            setString(6, newNickname)
+            executeUpdate()
+            close()
+        }
     }
 
     fun insertGuildVoiceGuildMuteRecord(
@@ -168,8 +248,23 @@ object UserlogManager {
         guildId: Long,
         newState: Boolean,
     ) {
-        // todo insert record into LogGuildVoiceGuildMute
-        TODO("Not yet implemented")
+        with(dbConnection.prepareStatement(
+            """
+                INSERT INTO LogGuildVoiceGuildMute
+                    (dis_user_id, username, timestamp, guild_id, new_state)
+                VALUES
+                    (?,           ?,        ?,         ?,        ?)
+                ;
+            """.trimIndent()
+        )) {
+            setLong(1, disUserId)
+            setString(2, username)
+            setDate(3, java.sql.Date(timestamp.time))
+            setLong(4, guildId)
+            setBoolean(5, newState)
+            executeUpdate()
+            close()
+        }
     }
 
     fun insertGuildVoiceGuildDeafenRecord(
@@ -179,10 +274,26 @@ object UserlogManager {
         guildId: Long,
         newState: Boolean,
     ) {
-        // todo insert record into LogGuildVoiceGuildDeafen
-        TODO("Not yet implemented")
+        with(dbConnection.prepareStatement(
+            """
+                INSERT INTO LogGuildVoiceGuildDeafen
+                    (dis_user_id, username, timestamp, guild_id, new_state)
+                VALUES
+                    (?,           ?,        ?,         ?,        ?)
+                ;
+            """.trimIndent()
+        )) {
+            setLong(1, disUserId)
+            setString(2, username)
+            setDate(3, java.sql.Date(timestamp.time))
+            setLong(4, guildId)
+            setBoolean(5, newState)
+            executeUpdate()
+            close()
+        }
     }
 
+    @Suppress("DuplicatedCode")
     fun insertMessageDeleteRecord(
         authorDisUserId: Long?,
         authorUsername: String?,
@@ -193,15 +304,78 @@ object UserlogManager {
         messageId: Long,
         msgTruncated: String?
     ) {
-        // todo insert record into LogMessageDelete
-        TODO("Not yet implemented")
+        val prepStatement = dbConnection.prepareStatement(
+            """
+                INSERT INTO LogMessageDelete
+                    (author_dis_user_id, author_username, timestamp, guild_id, channel_id, channel_name, message_id, msg_truncated)
+                VALUES
+                    (?,                  ?,               ?,         ?,        ?,          ?,            ?,          ?)
+                ;
+            """.trimIndent()
+        )
+
+        if(authorDisUserId == null) {
+            prepStatement.setNull(1, Types.BIGINT)
+        } else {
+            prepStatement.setLong(1, authorDisUserId)
+        }
+
+        with(prepStatement) {
+            setString(2, authorUsername)
+            setDate(3, java.sql.Date(timestamp.time))
+            setLong(4, guildId)
+            setLong(5, channelId)
+            setString(6, channelName)
+            setLong(7, messageId)
+            setString(8, msgTruncated)
+            executeUpdate()
+            close()
+        }
     }
 
     fun insertMessageReceived(
-        loggedMsg: LoggedMsg
+        msg: LoggedMsg
     ) {
-        // todo insert record into LogMessage
-        TODO("Not yet implemented")
+        // insert record into LogMessage
+        val statement = dbConnection.prepareStatement(
+            """
+                INSERT INTO LogMessage
+                    (dis_user_id, username, received_timestamp, last_update_timestamp, guild_id, channel_id,
+                    channel_name, channel_type, message_id, original_msg, latest_msg, msg_type, msg_jump_url,
+                    referenced_msg_id, attachments_summary)
+                VALUES
+                    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ;
+            """.trimIndent()
+        )
+
+        with(statement) {
+            setLong(1, msg.disUserId)
+            setString(2, msg.username)
+            setDate(3, java.sql.Date(msg.receivedTimestamp.time))
+            setDate(4, msg.lastUpdateTimestamp?.let { java.sql.Date(it.time) }) // `let` for nullable date
+            setLong(5, msg.guildId)
+            setLong(6, msg.channelId)
+            setString(7, msg.channelName)
+            setString(8, msg.channelType)
+            setLong(9, msg.messageId)
+            setString(10, msg.originalMsg)
+            setString(11, msg.latestMsg)
+            setString(12, msg.msgType)
+            setString(13, msg.msgJumpUrl)
+            // note: parameters 14 and 15 are handled below.
+            // note: executing update and closing statement is handled below.
+        }
+
+        if(msg.referencedMsgId == null) {
+            statement.setNull(14, Types.BIGINT)
+        } else {
+            statement.setLong(14, msg.referencedMsgId)
+        }
+
+        statement.setString(15, msg.attachmentsSummary)
+        statement.executeUpdate()
+        statement.close()
     }
 
     fun insertMessageUpdate(
@@ -216,11 +390,50 @@ object UserlogManager {
         newMsg: String,
         attachmentsSummary: String?
     ) {
-        // TODO Insert LogMessageUpdate record
-        // TODO Update LogMessage record
-        TODO("Not yet implemented")
+        // Insert LogMessageUpdate record
+        with(dbConnection.prepareStatement(
+            """
+                INSERT INTO LogMessageUpdate
+                    (dis_user_id, username, timestamp, guild_id, channel_id,
+                    channel_name, message_id, old_msg, new_msg, attachments_summary)
+                VALUES
+                    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ;
+            """.trimIndent()
+        )) {
+            setLong(1, disUserId)
+            setString(2, username)
+            setDate(3, java.sql.Date(timestamp.time))
+            setLong(4, guildId)
+            setLong(5, channelId)
+            setString(6, channelName)
+            setLong(7, messageId)
+            setString(8, oldMsg)
+            setString(9, newMsg)
+            setString(10, attachmentsSummary)
+            executeUpdate()
+            close()
+        }
+
+        // Update LogMessage record
+        with(dbConnection.prepareStatement(
+            """
+                UPDATE LogMessage
+                SET
+                    last_update_timestamp = ?,
+                    latest_msg = ?
+                WHERE message_id = ?;
+            """.trimIndent()
+        )) {
+            setDate(1, java.sql.Date(timestamp.time))
+            setString(2, newMsg)
+            setLong(3, messageId)
+            executeUpdate()
+            close()
+        }
     }
 
+    @Suppress("DuplicatedCode")
     fun insertUserActivityStartRecord(
         disUserId: Long,
         username: String,
@@ -231,10 +444,29 @@ object UserlogManager {
         isRichPresence: Boolean,
         emojiName: String?
     ) {
-        // TODO insert record into LogUserActivityStart
-        TODO("Not yet implemented")
+        with(dbConnection.prepareStatement(
+            """
+                INSERT INTO LogUserActivityStart
+                    (dis_user_id, username, timestamp, type, name, url, is_rich_presence, emoji_name)
+                VALUES
+                    (?,           ?,        ?,         ?,    ?,    ?,   ?,                ?)
+                ;
+            """.trimIndent()
+        )) {
+            setLong(1, disUserId)
+            setString(2, username)
+            setDate(3, java.sql.Date(timestamp.time))
+            setString(4, type)
+            setString(5, name)
+            setString(6, url)
+            setBoolean(7, isRichPresence)
+            setString(8, emojiName)
+            executeUpdate()
+            close()
+        }
     }
 
+    @Suppress("DuplicatedCode")
     fun insertUserActivityEndRecord(
         disUserId: Long,
         username: String,
@@ -245,8 +477,26 @@ object UserlogManager {
         isRichPresence: Boolean,
         emojiName: String?
     ) {
-        // TODO insert record into LogUserActivityEnd
-        TODO("Not yet implemented")
+        with(dbConnection.prepareStatement(
+            """
+                INSERT INTO LogUserActivityEnd
+                    (dis_user_id, username, timestamp, type, name, url, is_rich_presence, emoji_name)
+                VALUES
+                    (?,           ?,        ?,         ?,    ?,    ?,   ?,                ?)
+                ;
+            """.trimIndent()
+        )) {
+            setLong(1, disUserId)
+            setString(2, username)
+            setDate(3, java.sql.Date(timestamp.time))
+            setString(4, type)
+            setString(5, name)
+            setString(6, url)
+            setBoolean(7, isRichPresence)
+            setString(8, emojiName)
+            executeUpdate()
+            close()
+        }
     }
 
     fun insertUserUpdateGlobalNameRecord(
@@ -256,8 +506,23 @@ object UserlogManager {
         oldName: String?,
         newName: String?
     ) {
-        // TODO insert record into LogUserUpdateGlobalName
-        TODO("Not yet implemented")
+        with(dbConnection.prepareStatement(
+            """
+                INSERT INTO LogUserUpdateGlobalName
+                    (dis_user_id, username, timestamp, old_name, new_name)
+                VALUES
+                    (?,           ?,        ?,         ?,        ?)
+                ;
+            """.trimIndent()
+        )) {
+            setLong(1, disUserId)
+            setString(2, username)
+            setDate(3, java.sql.Date(timestamp.time))
+            setString(4, oldName)
+            setString(5, newName)
+            executeUpdate()
+            close()
+        }
     }
 
 }

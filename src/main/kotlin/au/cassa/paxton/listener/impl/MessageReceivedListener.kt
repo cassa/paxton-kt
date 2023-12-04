@@ -8,11 +8,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 object MessageReceivedListener : ListenerAdapter() {
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
-        if (event.isFromGuild) return
+        if (!event.isFromGuild) return
 
-        UserlogManager.insertMessageReceived(
-            LoggedMsg(event.message)
-        )
+        UserlogManager.insertMessageReceived(LoggedMsg(event.message))
     }
 
 }

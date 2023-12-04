@@ -3,7 +3,8 @@ package au.cassa.paxton.config.impl
 import au.cassa.paxton.config.type.JsonConfig
 
 object SecretCfg : JsonConfig("secret") {
-    fun token(): String {
+
+    fun botToken(): String {
         val token = rootNode.node("bot_token").string!!
 
         if (token == "UNDEFINED") {
@@ -12,4 +13,13 @@ object SecretCfg : JsonConfig("secret") {
 
         return token
     }
+
+    fun databaseUsername(): String {
+        return rootNode.node("database", "username").string!!
+    }
+
+    fun databasePassword(): String {
+        return rootNode.node("database", "password").string!!
+    }
+
 }

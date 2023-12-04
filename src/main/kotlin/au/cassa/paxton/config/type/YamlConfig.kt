@@ -2,9 +2,14 @@
 
 package au.cassa.paxton.config.type
 
+import au.cassa.paxton.Paxton
 import au.cassa.paxton.config.Config
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader
+import java.io.File
+import java.io.FileOutputStream
 import kotlin.io.path.Path
+import kotlin.io.path.exists
+import kotlin.io.path.pathString
 
 abstract class YamlConfig(
     id: String
@@ -29,7 +34,26 @@ abstract class YamlConfig(
     }
 
     override fun saveIfNotExists() {
-        TODO("Not yet implemented")
+        // file object referencing the relative path
+        val file = File(relativePath.pathString)
+
+        // try to create the file - if it already exists, return
+        file.parentFile?.mkdirs()
+        val alreadyExists = !file.createNewFile()
+        if (alreadyExists) return
+
+        // create input stream referencing resource file
+        val istream = Paxton.javaClass.classLoader.getResourceAsStream(relativePath.pathString)!!
+
+        // create output stream referencing destination file
+        val ostream = FileOutputStream(file)
+
+        // write bytes from istream to ostream
+        ostream.write(istream.readBytes())
+    }
+
+    override fun exists(): Boolean {
+        return relativePath.exists()
     }
 
 }
