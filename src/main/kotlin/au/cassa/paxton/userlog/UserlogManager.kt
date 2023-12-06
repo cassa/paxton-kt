@@ -224,7 +224,7 @@ object UserlogManager {
         with(dbConnection.prepareStatement(
             """
                 INSERT INTO LogGuildMemberUpdateNickname
-                    (dis_user_id, username, timestamp, guild_id, old_nickname, old_nickname)
+                    (dis_user_id, username, timestamp, guild_id, old_nickname, new_nickname)
                 VALUES
                     (?,           ?,        ?,         ?,        ?,            ?)
                 ;
