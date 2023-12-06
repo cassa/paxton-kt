@@ -24,11 +24,12 @@ object ListenerManager {
     )
 
     fun load() {
-        Paxton.log.info("Loading listeners")
+        Paxton.log.info("Loading listeners...")
         listeners.forEach {
             Paxton.log.info("Loading listener ${it.javaClass.simpleName}...")
             Paxton.shardManager.addEventListener(it)
         }
+        Paxton.log.info("Listeners loaded.")
     }
 
 }

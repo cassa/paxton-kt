@@ -1,12 +1,12 @@
 package au.cassa.paxton.data
 
+import au.cassa.paxton.Paxton.log
 import au.cassa.paxton.config.impl.SecretCfg
 import au.cassa.paxton.config.impl.SettingsCfg
 import au.cassa.paxton.util.DatabaseUtils
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-import java.util.*
 
 object DatabaseManager {
 
@@ -14,23 +14,17 @@ object DatabaseManager {
         private set
 
     fun startup() {
+        log.info("Starting database manager...")
         connect()
         createTables()
     }
 
     fun shutdown() {
-        /*
-        In case dbConnection has not yet initialised and the bot is shutting down,
-        this will make it easier to understand why an NPE was thrown.
-        This probably won't ever occur, but, y'know.
-         */
-        Objects.requireNonNull(dbConnection, "dbConnection")
-
         dbConnection.close()
     }
 
     private fun connect() {
-        // Class.forName(MYSQL_DRIVER_CLASSPATH)
+        log.info("Connecting to database...")
 
         val address: String = SettingsCfg.databaseAddress()
         val port: String = SettingsCfg.databasePort()
@@ -39,9 +33,11 @@ object DatabaseManager {
         val password: String = SecretCfg.databasePassword()
 
         dbConnection = DriverManager.getConnection("jdbc:mysql://$address:$port/$dbName", username, password)
+        log.info("Database connection established.")
     }
 
     private fun createTables() {
+        log.info("Running DB table creation statements...")
         try {
             linkedSetOf(
                 DatabaseUtils.CREATE_TABLE_LOG_GUILD_MEMBER_UPDATE_AVATAR,
@@ -62,6 +58,7 @@ object DatabaseManager {
                 statement.executeUpdate(sql)
                 statement.close()
             }
+            log.info("DB tables created (or already exist).")
         } catch(ex: SQLException) {
             dbConnection.close()
             throw ex

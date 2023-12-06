@@ -34,6 +34,11 @@ import kotlin.system.exitProcess
 
 object Paxton {
 
+    init {
+        // Change the logging format
+        System.setProperty("java.util.logging.SimpleFormatter.format", "%1\$tF %1\$tT %4\$s %5\$s%6\$s%n")
+    }
+
     // Neat console logging utility from Java.
     val log: Logger = Logger.getLogger("Paxton")
 
@@ -50,16 +55,31 @@ object Paxton {
     }
 
     fun startup() {
-        log.info("Starting up")
+        log.info(
+            """
+                 ____________________
+                | Paxton-kt by CASSA |
+                '--------------------'
+                        \   ^__^
+                         \  (oo)\_______
+                            (__)\       )\/\
+                                ||----w |
+                                ||     ||
+                                
+                ... Paxton is starting up ...
+            """.trimIndent()
+        )
 
         // order of calls is important here
         ConfigManager.load()
         DatabaseManager.startup()
         loadShards()
         ListenerManager.load()
+        log.info("Startup complete.")
 
         while (true) {
             log.info("Awaiting command... (Use 'help' for help, 'quit' to shutdown.)")
+            print("$ ")
             val command: List<String> = readln().split(' ')
             when (command[0].lowercase()) {
                 "quit" -> {
@@ -87,9 +107,10 @@ object Paxton {
     }
 
     fun shutdown() {
-        log.info("Shutting down")
+        log.info("... Paxton is shutting down ...")
         shardManager.shutdown()
         DatabaseManager.shutdown()
+        log.info("Thank you and goodbye")
         exitProcess(0)
     }
 
@@ -98,6 +119,7 @@ object Paxton {
      * This is where the real bot stuff begins.
      */
     private fun loadShards() {
+        log.info("Loading shards...")
         try {
             shardManager = DefaultShardManagerBuilder
                 .createDefault(SecretCfg.botToken())
@@ -105,8 +127,8 @@ object Paxton {
                 .enableCache(CacheFlag.values().toSet())
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("cassa.au"))
-                //.enableIntents(GatewayIntent.values().toSet()) // we want ALL the intents! :)
                 .build()
+            log.info("ShardManager built.")
         } catch (ex: LoginException) {
             log.severe("Unable to login; are you using a valid bot token and have an internet connection?")
             throw ex
