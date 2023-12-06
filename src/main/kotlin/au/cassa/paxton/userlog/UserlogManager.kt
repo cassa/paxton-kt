@@ -241,12 +241,13 @@ object UserlogManager {
         }
     }
 
+    @Suppress("DuplicatedCode")
     fun insertGuildVoiceGuildMuteRecord(
         disUserId: Long,
         username: String,
         timestamp: Date,
         guildId: Long,
-        newState: Boolean,
+        newState: Boolean
     ) {
         with(dbConnection.prepareStatement(
             """
@@ -267,12 +268,13 @@ object UserlogManager {
         }
     }
 
+    @Suppress("DuplicatedCode")
     fun insertGuildVoiceGuildDeafenRecord(
         disUserId: Long,
         username: String,
         timestamp: Date,
         guildId: Long,
-        newState: Boolean,
+        newState: Boolean
     ) {
         with(dbConnection.prepareStatement(
             """

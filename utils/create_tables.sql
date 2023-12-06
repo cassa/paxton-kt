@@ -83,8 +83,6 @@ CREATE TABLE IF NOT EXISTS LogGuildVoiceGuildDeafen
     timestamp              DATETIME NOT NULL,
     guild_id               BIGINT   NOT NULL,
     new_state              BOOLEAN  NOT NULL,
-    moderator_dis_user_id  BIGINT   NOT NULL,
-    moderator_dis_username TINYTEXT NOT NULL,
     PRIMARY KEY (id)
 );
 

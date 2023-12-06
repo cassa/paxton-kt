@@ -13,7 +13,7 @@ object GuildVoiceGuildDeafenListener : ListenerAdapter() {
             username = event.member.user.name,
             timestamp = Date(),
             guildId = event.guild.idLong,
-            newState = event.isGuildDeafened,
+            newState = event.isGuildDeafened
         )
     }
 
