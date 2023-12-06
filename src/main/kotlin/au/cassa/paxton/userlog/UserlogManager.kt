@@ -125,7 +125,7 @@ object UserlogManager {
         )
         prepStatement.setLong(1, disUserId)
         prepStatement.setString(2, username)
-        prepStatement.setDate(3, java.sql.Date(timestamp.time))
+        prepStatement.setTimestamp(3, java.sql.Timestamp(timestamp.time))
         prepStatement.setLong(4, guildId)
         prepStatement.setString(5, oldAvatarUrl)
         prepStatement.setString(6, newAvatarUrl)
@@ -151,7 +151,7 @@ object UserlogManager {
         )
         prepStatement.setLong(1, disUserId)
         prepStatement.setString(2, username)
-        prepStatement.setDate(3, java.sql.Date(timestamp.time))
+        prepStatement.setTimestamp(3, java.sql.Timestamp(timestamp.time))
         prepStatement.setString(4, oldName)
         prepStatement.setString(5, newName)
         prepStatement.executeUpdate()
@@ -177,7 +177,7 @@ object UserlogManager {
         )
         prepStatement.setLong(1, disUserId)
         prepStatement.setString(2, username)
-        prepStatement.setDate(3, java.sql.Date(timestamp.time))
+        prepStatement.setTimestamp(3, java.sql.Timestamp(timestamp.time))
         prepStatement.setLong(4, guildId)
         prepStatement.setString(5, displayName)
         prepStatement.setInt(6, userCount)
@@ -204,7 +204,7 @@ object UserlogManager {
         )) {
             setLong(1, disUserId)
             setString(2, username)
-            setDate(3, java.sql.Date(timestamp.time))
+            setTimestamp(3, java.sql.Timestamp(timestamp.time))
             setLong(4, guildId)
             setString(5, displayName)
             setInt(6, userCount)
@@ -232,7 +232,7 @@ object UserlogManager {
         )) {
             setLong(1, disUserId)
             setString(2, username)
-            setDate(3, java.sql.Date(timestamp.time))
+            setTimestamp(3, java.sql.Timestamp(timestamp.time))
             setLong(4, guildId)
             setString(5, oldNickname)
             setString(6, newNickname)
@@ -259,7 +259,7 @@ object UserlogManager {
         )) {
             setLong(1, disUserId)
             setString(2, username)
-            setDate(3, java.sql.Date(timestamp.time))
+            setTimestamp(3, java.sql.Timestamp(timestamp.time))
             setLong(4, guildId)
             setBoolean(5, newState)
             executeUpdate()
@@ -285,7 +285,7 @@ object UserlogManager {
         )) {
             setLong(1, disUserId)
             setString(2, username)
-            setDate(3, java.sql.Date(timestamp.time))
+            setTimestamp(3, java.sql.Timestamp(timestamp.time))
             setLong(4, guildId)
             setBoolean(5, newState)
             executeUpdate()
@@ -322,7 +322,7 @@ object UserlogManager {
 
         with(prepStatement) {
             setString(2, authorUsername)
-            setDate(3, java.sql.Date(timestamp.time))
+            setTimestamp(3, java.sql.Timestamp(timestamp.time))
             setLong(4, guildId)
             setLong(5, channelId)
             setString(6, channelName)
@@ -352,8 +352,8 @@ object UserlogManager {
         with(statement) {
             setLong(1, msg.disUserId)
             setString(2, msg.username)
-            setDate(3, java.sql.Date(msg.receivedTimestamp.time))
-            setDate(4, msg.lastUpdateTimestamp?.let { java.sql.Date(it.time) }) // `let` for nullable date
+            setTimestamp(3, java.sql.Timestamp(msg.receivedTimestamp.time))
+            setTimestamp(4, msg.lastUpdateTimestamp?.let { java.sql.Timestamp(it.time) }) // `let` for nullable date
             setLong(5, msg.guildId)
             setLong(6, msg.channelId)
             setString(7, msg.channelName)
@@ -403,7 +403,7 @@ object UserlogManager {
         )) {
             setLong(1, disUserId)
             setString(2, username)
-            setDate(3, java.sql.Date(timestamp.time))
+            setTimestamp(3, java.sql.Timestamp(timestamp.time))
             setLong(4, guildId)
             setLong(5, channelId)
             setString(6, channelName)
@@ -425,7 +425,7 @@ object UserlogManager {
                 WHERE message_id = ?;
             """.trimIndent()
         )) {
-            setDate(1, java.sql.Date(timestamp.time))
+            setTimestamp(1, java.sql.Timestamp(timestamp.time))
             setString(2, newMsg)
             setLong(3, messageId)
             executeUpdate()
@@ -455,7 +455,7 @@ object UserlogManager {
         )) {
             setLong(1, disUserId)
             setString(2, username)
-            setDate(3, java.sql.Date(timestamp.time))
+            setTimestamp(3, java.sql.Timestamp(timestamp.time))
             setString(4, type)
             setString(5, name)
             setString(6, url)
@@ -488,7 +488,7 @@ object UserlogManager {
         )) {
             setLong(1, disUserId)
             setString(2, username)
-            setDate(3, java.sql.Date(timestamp.time))
+            setTimestamp(3, java.sql.Timestamp(timestamp.time))
             setString(4, type)
             setString(5, name)
             setString(6, url)
@@ -517,7 +517,7 @@ object UserlogManager {
         )) {
             setLong(1, disUserId)
             setString(2, username)
-            setDate(3, java.sql.Date(timestamp.time))
+            setTimestamp(3, java.sql.Timestamp(timestamp.time))
             setString(4, oldName)
             setString(5, newName)
             executeUpdate()
