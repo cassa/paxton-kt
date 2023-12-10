@@ -1,6 +1,28 @@
-# Paxton
+# Paxton `kt`
 
-Paxton is a Discord Bot which serves to aid in administrating the CASSA Discord Server.
+Paxton is [CASSA][CASSA Homepage]'s [Discord][Discord Server] bot, providing various services to CASSA's members and Committee.
 
-- Written in Kotlin
-- Using the JDA Library
+## About
+
+This repository contains the Kotlin (kt) implementation of Paxton, developed in 2023 by Lachlan Adamson, Alexander Hill, and Memphis Marshall with additional contributors. The bot uses the [JDA v5][JDA Repo] library under the hood.
+
+## Features
+
+### For the Members...
+
+- `/paxton` slash command to view information about the bot.
+
+### For the Committee...
+
+- `/send-template` slash command to make it easy to send nicely formatted messages.
+- User activity logs for effective moderation, with automatic purging.
+
+## Contributing
+
+Ask the CASSA Tech Admin on our [Discord Server][Discord Server] if you'd like to contribute to Paxton. :)
+
+
+
+[CASSA Homepage]: https://cassa.au
+[Discord Server]: https://cassa.au/discord/
+[JDA Repo]: https://github.com/discord-jda/JDA/
