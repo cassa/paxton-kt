@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands
 import java.lang.System.currentTimeMillis
 import java.net.InetAddress
 
-object PingSlashCommand : SlashCmd(
+object PingSlashCmd : SlashCmd(
     cmdData = Commands
         .slash("ping", "Check the bot's ping. Skill issue if over >100ms.")
         .setDefaultPermissions(DefaultMemberPermissions.ENABLED)

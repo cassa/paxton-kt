@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import java.lang.management.ManagementFactory
 
-object UptimeSlashCommand : SlashCmd(
+object UptimeSlashCmd : SlashCmd(
     cmdData = Commands
         .slash("uptime", "View the uptime of CASSA's discord bot!")
         .setDefaultPermissions(DefaultMemberPermissions.ENABLED)
