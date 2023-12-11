@@ -1,8 +1,8 @@
 package au.cassa.paxton.config.impl
 
-import au.cassa.paxton.config.type.JsonConfig
+import au.cassa.paxton.config.type.YamlConfig
 
-object SettingsCfg : JsonConfig("settings") {
+object SettingsCfg : YamlConfig("settings") {
 
     fun databaseName(): String {
         return rootNode.node("database", "name").string!!

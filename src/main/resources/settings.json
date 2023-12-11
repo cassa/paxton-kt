@@ -1,7 +1,0 @@
-{
-  "database": {
-    "name": "paxton",
-    "address": "localhost",
-    "port": "3306"
-  }
-}

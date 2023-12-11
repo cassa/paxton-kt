@@ -1,0 +1,34 @@
+database:
+  name: "paxton"
+  address: "localhost"
+  port: "3306"
+
+post-templates:
+  - id: "example"
+    messages:
+      - title: "Example #{Placeholder.1}: {Placeholder.2}" # optional
+        description: ""
+        url: "https://example.com" # optional
+        timestamp: 1702217350727 # optional
+        color: 0xA1B2C3 # optional
+        thumbnail: # optional
+          url: "https://example.com/image.jpg"
+        author: # optional
+          name: "Johnny Appleseed" # optional
+          icon-url: "https://example.com/image.jpg" # optional
+          url: "https://example.com" # optional
+        provider: # optional
+          name: "Johnny Appleseed Inc." # optional
+          url: "https://example.com" # optional
+        video: # optional
+          url: "https://example.com/video.mp4"
+        footer: # optional
+          text: "Footer Text"
+          icon-url: "https://example.com/image.jpg" # optional
+        image:
+          url: "https://example.com/image.jpg"
+        fields: # optional
+          - name: "Name"
+            value: "Value"
+            inline: true # optional
+            checked: false # optional

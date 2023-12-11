@@ -22,6 +22,7 @@ import au.cassa.paxton.config.ConfigManager
 import au.cassa.paxton.config.impl.SecretCfg
 import au.cassa.paxton.data.DatabaseManager
 import au.cassa.paxton.listener.ListenerManager
+import au.cassa.paxton.util.ThreadUtils
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.requests.GatewayIntent
@@ -109,6 +110,7 @@ object Paxton {
 
     fun shutdown() {
         log.info("... Paxton is shutting down ...")
+        ThreadUtils.executorService.shutdownNow()
         shardManager.shutdown()
         DatabaseManager.shutdown()
         log.info("Thank you and goodbye")

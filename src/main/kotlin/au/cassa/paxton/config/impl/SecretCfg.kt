@@ -1,13 +1,15 @@
 package au.cassa.paxton.config.impl
 
-import au.cassa.paxton.config.type.JsonConfig
+import au.cassa.paxton.config.type.YamlConfig
 
-object SecretCfg : JsonConfig("secret") {
+object SecretCfg : YamlConfig("secret") {
+
+    const val UNDEFINED_VALUE = "UNDEFINED"
 
     fun botToken(): String {
         val token = rootNode.node("bot_token").string!!
 
-        if (token == "UNDEFINED") {
+        if (token.equals(UNDEFINED_VALUE, ignoreCase = true)) {
             throw IllegalArgumentException("Bot token cannot be undefined in $relativePath")
         }
 

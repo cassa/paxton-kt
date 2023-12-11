@@ -28,7 +28,7 @@ object PingSlashCommand : SlashCmd(
 
         event.deferReply(true).queue()
 
-        ThreadUtils.executorService.run {
+        ThreadUtils.executorService.submit {
             val timeTaken: Long = currentTimeMillis() - (event.timeCreated.toEpochSecond() * 1000)
             val strBuilder = StringBuilder("Time taken: ${timeTaken}ms")
 
