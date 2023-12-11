@@ -7,7 +7,7 @@ object SecretCfg : YamlConfig("secret") {
     const val UNDEFINED_VALUE = "UNDEFINED"
 
     fun botToken(): String {
-        val token = rootNode.node("bot_token").string!!
+        val token = rootNode.node("bot-token").string!!
 
         if (token.equals(UNDEFINED_VALUE, ignoreCase = true)) {
             throw IllegalArgumentException("Bot token cannot be undefined in $relativePath")

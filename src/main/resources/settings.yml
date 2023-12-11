@@ -7,28 +7,21 @@ post-templates:
   - id: "example"
     messages:
       - title: "Example #{Placeholder.1}: {Placeholder.2}" # optional
-        description: ""
+        description: "" # optional
         url: "https://example.com" # optional
-        timestamp: 1702217350727 # optional
+        timestamp: 1702217350727 # optional EPOCH SECONDS
         color: 0xA1B2C3 # optional
-        thumbnail: # optional
-          url: "https://example.com/image.jpg"
+        thumbnail: "https://example.com/image.jpg" # optional
         author: # optional
           name: "Johnny Appleseed" # optional
           icon-url: "https://example.com/image.jpg" # optional
           url: "https://example.com" # optional
-        provider: # optional
-          name: "Johnny Appleseed Inc." # optional
-          url: "https://example.com" # optional
-        video: # optional
-          url: "https://example.com/video.mp4"
         footer: # optional
           text: "Footer Text"
           icon-url: "https://example.com/image.jpg" # optional
-        image:
-          url: "https://example.com/image.jpg"
+        img: "https://example.com/image.jpg" # optional
         fields: # optional
-          - name: "Name"
-            value: "Value"
+          - name: "Name" # required
+            value: "Value" # required
             inline: true # optional
             checked: false # optional
