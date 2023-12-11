@@ -11,6 +11,8 @@ This repository contains the Kotlin (kt) implementation of Paxton, developed in 
 ### For the Members...
 
 - `/paxton` slash command to view information about the bot.
+- `/ping` slash command to view the bot and website's latency.
+- `/uptime` slash command to view the bot's uptime.
 
 ### For the Committee...
 
