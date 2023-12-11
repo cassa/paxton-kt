@@ -1,5 +1,6 @@
 package au.cassa.paxton.slashcmd.impl
 
+import au.cassa.paxton.Paxton
 import au.cassa.paxton.slashcmd.SlashCmd
 import au.cassa.paxton.slashcmd.SlashCmdUtils
 import au.cassa.paxton.util.ThreadUtils
@@ -22,44 +23,54 @@ object PingSlashCommand : SlashCmd(
     override fun onInteraction(
         event: SlashCommandInteractionEvent
     ) {
-        // each reachAddr call will take up to 2 seconds (usually very quick), so we have to run this async
+        // each reachAddr call will take up to 5 seconds (usually very quick), so we have to run this async
         // and defer the reply
 
         event.deferReply(true).queue()
 
         ThreadUtils.executorService.run {
-            val strBuilder = StringBuilder()
+            val timeTaken: Long = currentTimeMillis() - (event.timeCreated.toEpochSecond() * 1000)
+            val strBuilder = StringBuilder("Time taken: ${timeTaken}ms")
+
+            val localhostLatency: Long? = reachAddrTime("127.0.0.1")
+            strBuilder.append("\n\n • Latency [Paxton -> Localhost 127.0.0.1]: ")
+            if(localhostLatency == null) {
+                strBuilder.append(UNABLE_TO_REACH)
+            } else {
+                strBuilder.append("${localhostLatency}ms")
+            }
+
+            val cloudflareLatency: Long? = reachAddrTime("1.1.1.1")
+            strBuilder.append("\n\n • Latency [Paxton -> Cloudflare DNS 1.1.1.1]: ")
+            if(cloudflareLatency == null) {
+                strBuilder.append(UNABLE_TO_REACH)
+            } else {
+                strBuilder.append("${cloudflareLatency}ms")
+            }
 
             val discordLatency: Long? = reachAddrTime("discord.com")
-            strBuilder.append(" • Latency [Paxton -> discord.com]: ")
+            strBuilder.append("\n\n • Latency [Paxton -> discord.com]: ")
             if(discordLatency == null) {
                 strBuilder.append(UNABLE_TO_REACH)
             } else {
                 strBuilder.append("${discordLatency}ms")
             }
-            strBuilder.append("\n\n")
 
             val cassaLatency: Long? = reachAddrTime("cassa.au")
-            strBuilder.append(" • Latency [Paxton -> cassa.au]: ")
+            strBuilder.append("\n\n • Latency [Paxton -> cassa.au]: ")
             if(cassaLatency == null) {
                 strBuilder.append(UNABLE_TO_REACH)
             } else {
                 strBuilder.append("${cassaLatency}ms")
             }
-            strBuilder.append("\n\n")
 
-            val timeTaken: Long = currentTimeMillis() - (event.timeCreated.toEpochSecond() * 1000)
-            strBuilder.append("Time taken: ${timeTaken}ms")
-
-            event
-                .replyEmbeds(
-                    EmbedBuilder()
-                        .setTitle("Ping pong!")
-                        .setDescription(strBuilder.toString())
-                        .setColor(SlashCmdUtils.colorInfo)
-                        .build()
+            event.interaction.hook
+                .editOriginalEmbeds(EmbedBuilder()
+                    .setTitle("Ping pong!")
+                    .setDescription(strBuilder.toString())
+                    .setColor(SlashCmdUtils.colorInfo)
+                    .build()
                 )
-                .setEphemeral(true)
                 .queue()
         }
     }
@@ -68,18 +79,20 @@ object PingSlashCommand : SlashCmd(
         // intentionally blank: no suggestions to provide
     }
 
-    private fun reachAddrTime(ip: String, maxTime: Int = 2000): Long? {
+    private fun reachAddrTime(host: String, maxTime: Int = 2000): Long? {
 
         try {
             val startTime: Long = currentTimeMillis()
-            val address: InetAddress = InetAddress.getByName(ip)
+            val address = InetAddress.getByName(host)
+            Paxton.log.info("Pinging host=${host}, hostAddress=${address.hostAddress}")
 
             if (address.isReachable(maxTime))
-                return (currentTimeMillis() - startTime)
+                return currentTimeMillis() - startTime
         } catch (ex: Exception) {
-            println("Unable to run reachAddrTime with ip=${ip}, maxTime=${maxTime}; is the website down? Stack trace:")
+            println("Unable to run reachAddrTime with host $host in ${maxTime}ms; is the website down? Stack trace:")
             ex.printStackTrace()
         }
+
 
         return null
 

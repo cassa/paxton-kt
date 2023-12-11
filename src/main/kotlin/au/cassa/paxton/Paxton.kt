@@ -125,7 +125,7 @@ object Paxton {
             shardManager = DefaultShardManagerBuilder
                 .createDefault(SecretCfg.botToken())
                 .enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
-                .enableCache(CacheFlag.values().toSet())
+                .enableCache(CacheFlag.entries.toSet())
                 .setStatus(OnlineStatus.ONLINE)
                 .setActivity(Activity.watching("cassa.au"))
                 .build()

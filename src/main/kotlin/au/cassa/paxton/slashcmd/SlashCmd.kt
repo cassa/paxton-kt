@@ -10,7 +10,9 @@ abstract class SlashCmd(
     val cmdData: SlashCommandData,
 ) {
 
-    fun load() {
+    fun register() {
+        Paxton.log.info("Registering slash command listener for '/${cmdData.name}'...")
+
         // Each slash command registers its own event listener.
         Paxton.shardManager.addEventListener(
             // Create a new ListenerAdapter object which contains a slash command listener.
@@ -43,9 +45,7 @@ abstract class SlashCmd(
             }
         )
 
-        Paxton.shardManager.guilds.forEach { guild -> guild.upsertCommand(cmdData) }
-
-        Paxton.log.info("Loaded slash command '${cmdData.name}'")
+        Paxton.log.info("Slash command listener registered.")
     }
 
     abstract fun onInteraction(event: SlashCommandInteractionEvent)
