@@ -9,9 +9,9 @@ import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import java.lang.management.ManagementFactory
 
-class uptimeSlashCommand : SlashCmd(
+object UptimeSlashCommand : SlashCmd(
     cmdData = Commands
-        .slash("Bot Uptime", "Discover the uptime of CASSA's discord bot!")
+        .slash("uptime", "View the uptime of CASSA's discord bot!")
         .setDefaultPermissions(DefaultMemberPermissions.ENABLED)
 ) {
 
@@ -22,11 +22,7 @@ class uptimeSlashCommand : SlashCmd(
             .replyEmbeds(
                 EmbedBuilder()
                     .setTitle("Uptime")
-                    .setDescription(
-                        """
-                        JVM uptime: ${ManagementFactory.getRuntimeMXBean().uptime} ms
-                        """.trimIndent()
-                    )
+                    .setDescription("JVM uptime: ${ManagementFactory.getRuntimeMXBean().uptime}ms")
                     .setColor(SlashCmdUtils.colorInfo)
                     .build()
             )
