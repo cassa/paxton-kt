@@ -22,7 +22,7 @@ object ReloadSlashCmd : SlashCmd(
     ) {
         event.deferReply(true).queue()
 
-        ThreadUtils.executorService.submit {
+        ThreadUtils.asyncExecutor.submit {
             try {
                 Paxton.reload()
             } catch(ex: Exception) {

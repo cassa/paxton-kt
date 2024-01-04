@@ -4,9 +4,11 @@ import au.cassa.paxton.Paxton.log
 import au.cassa.paxton.config.impl.SecretCfg
 import au.cassa.paxton.config.impl.SettingsCfg
 import au.cassa.paxton.util.DatabaseUtils
+import au.cassa.paxton.util.ThreadUtils
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
+import java.util.concurrent.TimeUnit
 
 object DatabaseManager {
 
@@ -17,10 +19,14 @@ object DatabaseManager {
         log.info("Starting database manager...")
         connect()
         createTables()
+        scheduleUserlogAutoPurging()
+        log.info("Started database manager successfully.")
     }
 
     fun shutdown() {
+        log.info("Shutting down database manager...")
         dbConnection.close()
+        log.info("Shut-down database manager successfully.")
     }
 
     private fun connect() {
@@ -63,6 +69,22 @@ object DatabaseManager {
             dbConnection.close()
             throw ex
         }
+    }
+
+    fun scheduleUserlogAutoPurging() {
+        ThreadUtils.scheduledExecutor.scheduleAtFixedRate(
+            {
+                log.info("Auto-purging user logs as scheduled...")
+                with(dbConnection.createStatement()) {
+                    executeUpdate(DatabaseUtils.AUTO_PURGE_OLD_RECORDS)
+                    close()
+                }
+                log.info("Auto-purge complete.")
+            },
+            1,
+            1,
+            TimeUnit.DAYS
+        )
     }
 
 }

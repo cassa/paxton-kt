@@ -110,7 +110,7 @@ object Paxton {
 
     fun shutdown() {
         log.info("... Paxton is shutting down ...")
-        ThreadUtils.executorService.shutdownNow()
+        ThreadUtils.asyncExecutor.shutdownNow()
         shardManager.shutdown()
         DatabaseManager.shutdown()
         log.info("Thank you and goodbye")

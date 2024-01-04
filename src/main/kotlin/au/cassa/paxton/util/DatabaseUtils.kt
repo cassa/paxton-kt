@@ -231,6 +231,28 @@ object DatabaseUtils {
             );
         """
 
+    const val AUTO_PURGE_OLD_RECORDS =
+        """
+            DELETE FROM
+                LogGuildMemberUpdateAvatar,
+                LogUserUpdateName,
+                LogGuildMemberJoin,
+                LogGuildMemberRemove,
+                LogGuildMemberUpdateNickname,
+                LogGuildVoiceGuildMute,
+                LogGuildVoiceGuildDeafen,
+                LogMessageDelete,
+                LogMessage,
+                LogMessageUpdate,
+                LogUserActivityStart,
+                LogUserActivityEnd,
+                LogUserUpdateGlobalName
+            WHERE
+                case_id IS NULL AND
+                DATEDIFF(timestamp, CURRENT_TIMESTAMP) >= 30
+            ;
+        """
+
     fun getNullableLongFromResultSet(resultSet: ResultSet, columnIndex: Int): Long? {
         val l = resultSet.getLong(columnIndex)
         return if (resultSet.wasNull()) null else l
