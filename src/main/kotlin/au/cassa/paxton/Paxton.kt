@@ -117,6 +117,14 @@ object Paxton {
         exitProcess(0)
     }
 
+    fun reload() {
+        log.info("Reloading...")
+
+        ConfigManager.load()
+
+        log.info("Reloaded successfully.")
+    }
+
     /**
      * Initialise JDA's shard management system.
      * This is where the real bot stuff begins.

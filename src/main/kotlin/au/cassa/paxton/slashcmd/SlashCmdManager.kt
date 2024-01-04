@@ -1,16 +1,14 @@
 package au.cassa.paxton.slashcmd
 
 import au.cassa.paxton.Paxton
-import au.cassa.paxton.slashcmd.impl.PaxtonSlashCmd
-import au.cassa.paxton.slashcmd.impl.PingSlashCmd
-import au.cassa.paxton.slashcmd.impl.SendTemplateSlashCmd
-import au.cassa.paxton.slashcmd.impl.UptimeSlashCmd
+import au.cassa.paxton.slashcmd.impl.*
 
 object SlashCmdManager {
 
     private val commands: LinkedHashSet<SlashCmd> = linkedSetOf(
         PaxtonSlashCmd,
         PingSlashCmd,
+        ReloadSlashCmd,
         SendTemplateSlashCmd,
         UptimeSlashCmd,
     )
