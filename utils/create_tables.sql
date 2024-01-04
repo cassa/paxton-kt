@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS LogGuildMemberUpdateAvatar
 (
     id             BIGINT   NOT NULL AUTO_INCREMENT,
-    retain         BOOLEAN  NOT NULL DEFAULT (FALSE),
+    case_id        INT      NULL,
     dis_user_id    BIGINT   NOT NULL,
     username       TINYTEXT NOT NULL,
     timestamp      DATETIME NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS LogGuildMemberUpdateAvatar
 CREATE TABLE IF NOT EXISTS LogUserUpdateName
 (
     id          BIGINT   NOT NULL AUTO_INCREMENT,
-    retain      BOOLEAN  NOT NULL DEFAULT (FALSE),
+    case_id     INT      NULL,
     dis_user_id BIGINT   NOT NULL,
     username    TINYTEXT NOT NULL,
     timestamp   DATETIME NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS LogUserUpdateName
 CREATE TABLE IF NOT EXISTS LogGuildMemberJoin
 (
     id          BIGINT   NOT NULL AUTO_INCREMENT,
-    retain      BOOLEAN  NOT NULL DEFAULT (FALSE),
+    case_id     INT      NULL,
     dis_user_id BIGINT   NOT NULL,
     username    TINYTEXT NOT NULL,
     timestamp   DATETIME NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS LogGuildMemberJoin
 CREATE TABLE IF NOT EXISTS LogGuildMemberRemove
 (
     id          BIGINT   NOT NULL AUTO_INCREMENT,
-    retain      BOOLEAN  NOT NULL DEFAULT (FALSE),
+    case_id     INT      NULL,
     dis_user_id BIGINT   NOT NULL,
     username    TINYTEXT NOT NULL,
     timestamp   DATETIME NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS LogGuildMemberRemove
 CREATE TABLE IF NOT EXISTS LogGuildMemberUpdateNickname
 (
     id           BIGINT   NOT NULL AUTO_INCREMENT,
-    retain       BOOLEAN  NOT NULL DEFAULT (FALSE),
+    case_id      INT      NULL,
     dis_user_id  BIGINT   NOT NULL,
     username     TINYTEXT NOT NULL,
     timestamp    DATETIME NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS LogGuildMemberUpdateNickname
 CREATE TABLE IF NOT EXISTS LogGuildVoiceGuildMute
 (
     id          BIGINT   NOT NULL AUTO_INCREMENT,
-    retain      BOOLEAN  NOT NULL DEFAULT (FALSE),
+    case_id     INT      NULL,
     dis_user_id BIGINT   NOT NULL,
     username    TINYTEXT NOT NULL,
     timestamp   DATETIME NOT NULL,
@@ -76,20 +76,20 @@ CREATE TABLE IF NOT EXISTS LogGuildVoiceGuildMute
 
 CREATE TABLE IF NOT EXISTS LogGuildVoiceGuildDeafen
 (
-    id                     BIGINT   NOT NULL AUTO_INCREMENT,
-    retain                 BOOLEAN  NOT NULL DEFAULT (FALSE),
-    dis_user_id            BIGINT   NOT NULL,
-    username               TINYTEXT NOT NULL,
-    timestamp              DATETIME NOT NULL,
-    guild_id               BIGINT   NOT NULL,
-    new_state              BOOLEAN  NOT NULL,
+    id          BIGINT   NOT NULL AUTO_INCREMENT,
+    case_id     INT      NULL,
+    dis_user_id BIGINT   NOT NULL,
+    username    TINYTEXT NOT NULL,
+    timestamp   DATETIME NOT NULL,
+    guild_id    BIGINT   NOT NULL,
+    new_state   BOOLEAN  NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS LogMessageDelete
 (
     id                 BIGINT   NOT NULL AUTO_INCREMENT,
-    retain             BOOLEAN  NOT NULL DEFAULT (FALSE),
+    case_id            INT      NULL,
     author_dis_user_id BIGINT   NULL,
     author_username    TINYTEXT NULL,
     timestamp          DATETIME NOT NULL,
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS LogMessageDelete
 CREATE TABLE IF NOT EXISTS LogMessage
 (
     id                    BIGINT   NOT NULL AUTO_INCREMENT,
-    retain                BOOLEAN  NOT NULL DEFAULT (FALSE),
+    case_id               INT      NULL,
     dis_user_id           BIGINT   NOT NULL,
     username              TINYTEXT NOT NULL,
     received_timestamp    DATETIME NOT NULL,
@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS LogMessage
 CREATE TABLE IF NOT EXISTS LogMessageUpdate
 (
     id                  BIGINT   NOT NULL AUTO_INCREMENT,
-    retain              BOOLEAN  NOT NULL DEFAULT (FALSE),
+    case_id             INT      NULL,
     dis_user_id         BIGINT   NOT NULL,
     username            TINYTEXT NOT NULL,
     timestamp           DATETIME NOT NULL,
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS LogMessageUpdate
 CREATE TABLE IF NOT EXISTS LogUserActivityStart
 (
     id               BIGINT   NOT NULL AUTO_INCREMENT,
-    retain           BOOLEAN  NOT NULL DEFAULT (FALSE),
+    case_id          INT      NULL,
     dis_user_id      BIGINT   NOT NULL,
     username         TINYTEXT NOT NULL,
     timestamp        DATETIME NOT NULL,
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS LogUserActivityStart
 CREATE TABLE IF NOT EXISTS LogUserActivityEnd
 (
     id               BIGINT   NOT NULL AUTO_INCREMENT,
-    retain           BOOLEAN  NOT NULL DEFAULT (FALSE),
+    case_id          INT      NULL,
     dis_user_id      BIGINT   NOT NULL,
     username         TINYTEXT NULL,
     timestamp        DATETIME NOT NULL,
@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS LogUserActivityEnd
 CREATE TABLE IF NOT EXISTS LogUserUpdateGlobalName
 (
     id          BIGINT   NOT NULL AUTO_INCREMENT,
-    retain      BOOLEAN  NOT NULL DEFAULT (FALSE),
+    case_id     INT      NULL,
     dis_user_id BIGINT   NOT NULL,
     username    TINYTEXT NOT NULL,
     timestamp   DATETIME NOT NULL,
