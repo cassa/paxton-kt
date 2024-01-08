@@ -72,19 +72,34 @@ object DatabaseManager {
     }
 
     fun scheduleUserlogAutoPurging() {
+        log.info("Starting userlog auto-purge scheduler.")
         ThreadUtils.scheduledExecutor.scheduleAtFixedRate(
             {
-                log.info("Auto-purging user logs as scheduled...")
-                with(dbConnection.createStatement()) {
-                    executeUpdate(DatabaseUtils.AUTO_PURGE_OLD_RECORDS)
-                    close()
-                }
-                log.info("Auto-purge complete.")
+                purgeOldUserlogs()
             },
             0,
-            1,
+            30,
             TimeUnit.DAYS
         )
+    }
+
+    fun purgeOldUserlogs() {
+        log.info("Purging old userlogs...")
+        try {
+            with(dbConnection.createStatement()) {
+                log.fine("Purge: Created statement.")
+                DatabaseUtils.AUTO_PURGE_OLD_RECORDS.forEach { sql ->
+                    log.fine("Purge: Running SQL: $sql")
+                    executeUpdate(sql)
+                }
+                log.fine("Purge: Done, closing statement.")
+                close()
+            }
+        } catch(ex: Exception) {
+            log.severe("Unable to purge old userlogs! Stack trace:")
+            ex.printStackTrace()
+        }
+        log.info("Finished purging userlogs.")
     }
 
 }

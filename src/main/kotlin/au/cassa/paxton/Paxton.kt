@@ -92,10 +92,10 @@ object Paxton {
                     log.info(
                         """
                             Available commands:
-                             • help
+                             • help | h | commands | cmds
                                View available commands.
                                
-                             • quit
+                             • quit | q | exit | stop | end
                                Makes the bot shut-down.
                         """.trimIndent()
                     )

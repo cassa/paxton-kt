@@ -231,27 +231,35 @@ object DatabaseUtils {
             );
         """
 
-    const val AUTO_PURGE_OLD_RECORDS =
-        """
-            DELETE FROM
-                LogGuildMemberUpdateAvatar,
-                LogUserUpdateName,
-                LogGuildMemberJoin,
-                LogGuildMemberRemove,
-                LogGuildMemberUpdateNickname,
-                LogGuildVoiceGuildMute,
-                LogGuildVoiceGuildDeafen,
-                LogMessageDelete,
-                LogMessage,
-                LogMessageUpdate,
-                LogUserActivityStart,
-                LogUserActivityEnd,
-                LogUserUpdateGlobalName
-            WHERE
-                case_id IS NULL AND
-                DATEDIFF(timestamp, CURRENT_TIMESTAMP) >= 30
-            ;
-        """
+    val AUTO_PURGE_OLD_RECORDS: List<String> =
+        listOf(
+            "LogGuildMemberUpdateAvatar",
+            "LogUserUpdateName",
+            "LogGuildMemberJoin",
+            "LogGuildMemberRemove",
+            "LogGuildMemberUpdateNickname",
+            "LogGuildVoiceGuildMute",
+            "LogGuildVoiceGuildDeafen",
+            "LogMessageDelete",
+            "LogMessage",
+            "LogMessageUpdate",
+            "LogUserActivityStart",
+            "LogUserActivityEnd",
+            "LogUserUpdateGlobalName"
+        ).map {
+            val unit = "DAY"
+            val amount = "30"
+
+            return@map if(it == "LogMessage") {
+                """
+                    DELETE FROM $it WHERE case_id IS NULL AND TIMESTAMPDIFF($unit, COALESCE(last_update_timestamp, received_timestamp), CURRENT_TIMESTAMP()) >= $amount;
+                """.trimIndent()
+            } else {
+                """
+                    DELETE FROM $it WHERE case_id IS NULL AND TIMESTAMPDIFF($unit, timestamp, CURRENT_TIMESTAMP()) >= $amount;
+                """.trimIndent()
+            }
+        }
 
     fun getNullableLongFromResultSet(resultSet: ResultSet, columnIndex: Int): Long? {
         val l = resultSet.getLong(columnIndex)
