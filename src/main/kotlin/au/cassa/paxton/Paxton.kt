@@ -84,11 +84,11 @@ object Paxton {
             print("$ ")
             val command: List<String> = readln().split(' ')
             when (command[0].lowercase()) {
-                "quit" -> {
+                "quit", "q", "exit", "stop", "end" -> {
                     shutdown()
                 }
 
-                "help" -> {
+                "help", "h", "commands", "cmds" -> {
                     log.info(
                         """
                             Available commands:
