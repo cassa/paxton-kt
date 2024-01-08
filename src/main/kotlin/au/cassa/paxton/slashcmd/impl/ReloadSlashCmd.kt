@@ -56,7 +56,7 @@ object ReloadSlashCmd : SlashCmd(
                             """
                                 Paxton reloaded successfully.
                                 
-                                *Note: The reload slash command only updates the config loaded in memory, it does not reconnect the database or shards, which would reqire a restart.*
+                                *Note: The reload slash command only updates the config loaded in memory, it does not reconnect the database or shards, which would require a restart.*
                             """.trimIndent()
                         )
                         .setColor(SlashCmdUtils.colorInfo)
