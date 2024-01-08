@@ -81,7 +81,7 @@ object DatabaseManager {
                 }
                 log.info("Auto-purge complete.")
             },
-            1,
+            0,
             1,
             TimeUnit.DAYS
         )
