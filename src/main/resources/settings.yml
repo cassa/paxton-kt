@@ -1,7 +1,10 @@
-database:
-  name: "paxton"
-  address: "localhost"
-  port: "3306"
+# Uncomment for use in a non-containerised environment
+# When used in a container, environment variables should
+# control the database settings
+#database:
+#  name: "paxton"
+#  address: "localhost"
+#  port: "3306"
 
 post-templates:
   - id: "example"

@@ -17,4 +17,9 @@ abstract class Config(
 
     abstract fun exists(): Boolean
 
+    fun nodeIfNotEnv(vararg path: String): String {
+        val envName = path.joinToString("__").replace('-', '_')
+        println(envName)
+        return System.getenv(envName) ?: rootNode.node(*path).string!!
+    }
 }

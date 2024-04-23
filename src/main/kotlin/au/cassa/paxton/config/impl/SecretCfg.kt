@@ -7,7 +7,10 @@ object SecretCfg : YamlConfig("secret") {
     const val UNDEFINED_VALUE = "UNDEFINED"
 
     fun botToken(): String {
-        val token = rootNode.node("bot-token").string!!
+        System.getenv("")
+
+        val token = nodeIfNotEnv("bot-token")
+        //val token = rootNode.node("bot-token").string!!
 
         if (token.equals(UNDEFINED_VALUE, ignoreCase = true)) {
             throw IllegalArgumentException("Bot token cannot be undefined in $relativePath")
@@ -17,11 +20,13 @@ object SecretCfg : YamlConfig("secret") {
     }
 
     fun databaseUsername(): String {
-        return rootNode.node("database", "username").string!!
+        return nodeIfNotEnv("database", "username")
+        //return rootNode.node("database", "username").string!!
     }
 
     fun databasePassword(): String {
-        return rootNode.node("database", "password").string!!
+        return nodeIfNotEnv("database", "password")
+        //return rootNode.node("database", "password").string!!
     }
 
 }

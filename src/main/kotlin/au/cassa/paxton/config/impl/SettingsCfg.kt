@@ -5,15 +5,18 @@ import au.cassa.paxton.config.type.YamlConfig
 object SettingsCfg : YamlConfig("settings") {
 
     fun databaseName(): String {
-        return rootNode.node("database", "name").string!!
+        return nodeIfNotEnv("database", "name")
+        //return rootNode.node("database", "name").string!!
     }
 
     fun databaseAddress(): String {
-        return rootNode.node("database", "address").string!!
+        return nodeIfNotEnv("database", "address")
+        //return rootNode.node("database", "address").string!!
     }
 
     fun databasePort(): String {
-        return rootNode.node("database", "port").string!!
+        return nodeIfNotEnv("database", "port")
+        //return rootNode.node("database", "port").string!!
     }
 
 }

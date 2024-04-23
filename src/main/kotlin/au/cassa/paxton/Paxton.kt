@@ -43,6 +43,24 @@ object Paxton {
     // Neat console logging utility from Java.
     val log: Logger = Logger.getLogger("Paxton")
 
+    // To check if we're in a container or not
+    val container: Boolean = run {
+        // Detect if we're in a docker container
+        // Make sure to set this env in the Dockerfile
+        val containerCheck: String? = System.getenv("CONTAINERISED")
+        // Brackets here for readability
+        // If the variable is present, and not set to a false-like value, we are in a container
+        containerCheck != null &&
+        (
+                // It's also now safe to remove the null check as we've already checked if it's null
+                containerCheck.lowercase() != "n" &&
+                containerCheck.lowercase() != "no" &&
+                containerCheck.lowercase() != "f" &&
+                containerCheck.lowercase() != "false" &&
+                containerCheck.lowercase() != "0"
+        )
+    }
+
     // JDA's shard manager. Initialized @ loadShards.
     lateinit var shardManager: ShardManager
         private set
@@ -72,6 +90,10 @@ object Paxton {
             """.trimIndent()
         )
 
+        if (container) {
+            log.info("We are in a docker container!")
+        }
+
         // order of calls is important here
         ConfigManager.load()
         DatabaseManager.startup()
@@ -79,18 +101,19 @@ object Paxton {
         ListenerManager.load()
         log.info("Startup complete.")
 
-        while (true) {
-            log.info("Awaiting command... (Use 'help' for help, 'quit' to shutdown.)")
-            print("$ ")
-            val command: List<String> = readln().split(' ')
-            when (command[0].lowercase()) {
-                "quit", "q", "exit", "stop", "end" -> {
-                    shutdown()
-                }
+        if (!container) {
+            while (true) {
+                log.info("Awaiting command... (Use 'help' for help, 'quit' to shutdown.)")
+                print("$ ")
+                val command: List<String> = readln().split(' ')
+                when (command[0].lowercase()) {
+                    "quit", "q", "exit", "stop", "end" -> {
+                        shutdown()
+                    }
 
-                "help", "h", "commands", "cmds" -> {
-                    log.info(
-                        """
+                    "help", "h", "commands", "cmds" -> {
+                        log.info(
+                            """
                             Available commands:
                              • help | h | commands | cmds
                                View available commands.
@@ -98,11 +121,12 @@ object Paxton {
                              • quit | q | exit | stop | end
                                Makes the bot shut-down.
                         """.trimIndent()
-                    )
-                }
+                        )
+                    }
 
-                else -> {
-                    log.warning("Unknown command '${command[0]}'")
+                    else -> {
+                        log.warning("Unknown command '${command[0]}'")
+                    }
                 }
             }
         }

@@ -38,6 +38,8 @@ object DatabaseManager {
         val username: String = SecretCfg.databaseUsername()
         val password: String = SecretCfg.databasePassword()
 
+        // Force include the driver in shading
+        com.mysql.jdbc.Driver::class.simpleName;
         dbConnection = DriverManager.getConnection("jdbc:mysql://$address:$port/$dbName", username, password)
         log.info("Database connection established.")
     }
